@@ -14,20 +14,35 @@ import { StarIcon } from "lucide-react"
  */
 async function getAllProducts() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000"}/product.json`, {
+    // Construct a full absolute URL for fetching static assets
+    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
+    const url = `${baseUrl}/product.json`
+
+    const res = await fetch(url, {
       cache: "no-store", // Ensure fresh data
     })
 
     if (!res.ok) {
-      throw new Error("Failed to fetch products")
+      const errorBody = await res.text()
+      console.error(`Failed to fetch products for detail page: HTTP Status ${res.status} - ${res.statusText}`)
+      console.error("Response body:", errorBody)
+      throw new Error(`Failed to fetch products for detail page: ${res.status} ${res.statusText}`)
     }
 
     /** @type {Product[]} */
     const products = await res.json()
     return products
   } catch (error) {
-    console.error("Error fetching all products for detail page:", error)
-    throw error
+    console.error(
+      "Error fetching all products for detail page:",
+      error instanceof Error ? error.message : String(error),
+    )
+    if (error instanceof Error) {
+      console.error(error)
+    } else {
+      console.error("Non-Error object caught:", error)
+    }
+    return [] // Return empty array to prevent further errors if fetch fails
   }
 }
 
@@ -48,10 +63,12 @@ export async function generateStaticParams() {
  * @param {{ params: { id: string } }} props
  */
 export default async function ProductDetailPage({ params }) {
+  console.log(`PostDetailPage received slug: "${params.id}"`) // Debug log
   const products = await getAllProducts()
   const product = products.find((p) => p.id === params.id)
 
   if (!product) {
+    console.log(`Post with slug "${params.id}" not found, rendering 404.`) // Debug log
     notFound() // Renders the closest not-found.jsx or a default 404 page
   }
 

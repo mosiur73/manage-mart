@@ -1,7 +1,6 @@
 import ProductList from "@/components/ProductList"
 import { Suspense } from "react"
 import Loading from "./loadings"
-// import Loading from "./loading"
 
 /**
  * @typedef {import('../../lib/types').Product} Product
@@ -13,20 +12,32 @@ import Loading from "./loadings"
  */
 async function getAllProducts() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000"}/product.json`, {
+    // Construct a full absolute URL for fetching static assets
+    const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
+    const url = `${baseUrl}/product.json`
+
+    const res = await fetch(url, {
       cache: "no-store", // Ensure fresh data on each request
     })
 
     if (!res.ok) {
-      throw new Error("Failed to fetch products")
+      const errorBody = await res.text()
+      console.error(`Failed to fetch products: HTTP Status ${res.status} - ${res.statusText}`)
+      console.error("Response body:", errorBody)
+      throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`)
     }
 
     /** @type {Product[]} */
     const products = await res.json()
     return products
   } catch (error) {
-    console.error("Error fetching products:", error)
-    throw error
+    console.error("Error fetching products:", error instanceof Error ? error.message : String(error))
+    if (error instanceof Error) {
+      console.error(error)
+    } else {
+      console.error("Non-Error object caught:", error)
+    }
+    return []
   }
 }
 
@@ -35,10 +46,13 @@ async function getAllProducts() {
  * @param {{ searchParams: { page?: string, limit?: string } }} props
  */
 export default async function ProductsPage({ searchParams }) {
+  // Await searchParams before accessing its properties
+  const awaitedSearchParams = await searchParams
+
   const allProducts = await getAllProducts()
 
-  const currentPage = Number.parseInt(searchParams.page || "1", 10)
-  const productsPerPage = Number.parseInt(searchParams.limit || "20", 10) // Default to 20 cards
+  const currentPage = Number.parseInt(awaitedSearchParams.page || "1", 10)
+  const productsPerPage = Number.parseInt(awaitedSearchParams.limit || "20", 10) // Default to 20 cards
 
   const startIndex = (currentPage - 1) * productsPerPage
   const endIndex = startIndex + productsPerPage
