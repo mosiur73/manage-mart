@@ -65,7 +65,7 @@ export async function generateStaticParams() {
 export default async function ProductDetailPage({ params }) {
   console.log(`PostDetailPage received slug: "${params.id}"`) // Debug log
   const products = await getAllProducts()
-  const product = products.find((p) => p.id === params.id)
+  const product = products.find((p) => p.id ===params.id)
 
   if (!product) {
     console.log(`Post with slug "${params.id}" not found, rendering 404.`) // Debug log

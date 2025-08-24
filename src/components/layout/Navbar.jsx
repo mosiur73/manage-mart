@@ -32,8 +32,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Dashboard", href: "/dashboard", protected: true },
-  { name: "Products", href: "/products" },
-  { name: "Team", href: "/team" },
+  // { name: "Products", href: "/products" },
+  { name: "Products", href: "/service" },
 ]
 
 export default function NavbarAuth() {
@@ -63,7 +63,7 @@ export default function NavbarAuth() {
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-primary-foreground">
               <Package className="h-4 w-4" />
             </div>
             <span className="hidden font-bold sm:inline-block">ProductHub</span>
@@ -100,7 +100,7 @@ export default function NavbarAuth() {
                   />
                 </div>
               </div>
-            )}
+            )} 
           </div>
         </div>
 

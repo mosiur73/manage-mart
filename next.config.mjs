@@ -3,7 +3,9 @@ const nextConfig = {
     images: {
     domains: [
       "assets.adidas.com",
-      "images.remotePatterns"
+      "images.remotePatterns",
+      "i.ibb.co.com"
+      
     ],
 }
 };
