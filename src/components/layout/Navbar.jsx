@@ -32,8 +32,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Dashboard", href: "/dashboard", protected: true },
-  // { name: "Products", href: "/products" },
   { name: "Products", href: "/service" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ]
 
 export default function NavbarAuth() {
@@ -87,7 +88,7 @@ export default function NavbarAuth() {
             </nav>
 
             {/* Search Bar - Centered and only shown when authenticated */}
-            {session && (
+            {/* {session && (
               <div className="hidden md:block w-64">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -100,7 +101,7 @@ export default function NavbarAuth() {
                   />
                 </div>
               </div>
-            )} 
+            )}  */}
           </div>
         </div>
 

@@ -10,15 +10,15 @@ import { StarIcon } from "lucide-react"
 export default function ServicePage() {
   const [search, setSearch] = useState("")
   const [priceRange, setPriceRange] = useState("")
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("All categories")
   const [currentPage, setCurrentPage] = useState(1)
 
-  const productsPerPage = 16
+  const productsPerPage = 12
 
-  // সব ক্যাটাগরি বের করা
+  // category ber kora
   const categories = ["All categories", ...new Set(products.map((p) => p.category))]
 
-  // প্রাইস রেঞ্জ লিস্ট
+  // price range list
   const priceRanges = [
     { label: "All price", value: "" },
     { label: "100 - 200", value: "100-200" },
@@ -29,7 +29,8 @@ export default function ServicePage() {
   // Filter logic
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase())
-    const matchesCategory = category === "" || category === "All" || product.category === category
+    const matchesCategory =
+      category === "" || category === "All categories" || product.category === category
 
     let matchesPrice = true
     if (priceRange) {

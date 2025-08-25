@@ -46,12 +46,12 @@ export default function NotFound() {
               </Link>
             </Button>
 
-            <Button asChild variant="outline" className="w-full bg-transparent">
+            {/* <Button asChild variant="outline" className="w-full bg-transparent">
               <Link href="/dashboard" className="flex items-center justify-center space-x-2">
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Dashboard</span>
               </Link>
-            </Button>
+            </Button> */}
           </div>
 
           {/* Fun fact */}
