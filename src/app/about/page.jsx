@@ -8,10 +8,11 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative bg-cover bg-center h-[70vh]"
        style={{ 
-        backgroundImage: `url('https://i.ibb.co.com/HLQGcH5J/aerial-shot-downtown-los-angeles-night.jpg')`
+        backgroundImage: `url('/images/about.jpeg')`
 
        }}>
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/40  flex items-center justify-center">
+                            
           <div className="text-center text-white px-6">
             <motion.h1 
               initial={{ opacity: 0, y: 40 }} 
@@ -52,7 +53,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 py-16 text-white">
+      <section className="bg-gradient-to-r bg-[#086ca2] py-16 text-white">
         <div className="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
             { number: "5+", label: "Years of Experience" },
@@ -88,7 +89,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-white w-1/3 text-center mx-auto p-6 rounded-xl shadow hover:shadow-lg"
+              className="bg-[#F9F6EE] w-1/3 text-center mx-auto p-6 rounded-xl shadow hover:shadow-lg"
             >
               <span className="text-indigo-600  font-bold">{item.year}</span>
               <p className="text-gray-600  mt-2">{item.text}</p>
@@ -106,12 +107,12 @@ export default function AboutPage() {
               <motion.div
                 key={index}
                 whileHover={{ scale: 1.05 }}
-                className="bg-white rounded-2xl shadow-lg p-6 text-center"
+                className="bg-[#E7E7E7] rounded-2xl shadow-lg p-6 text-center"
               >
                 <img
                   src={`https://i.pravatar.cc/150?img=${index + 1}`}
                   alt={name}
-                  className="w-28 h-28 rounded-full mx-auto mb-4 border-4 border-indigo-600"
+                  className="w-28 h-28 rounded-full  mx-auto mb-4 border-4 border-indigo-600"
                 />
                 <h3 className="text-xl font-semibold">{name}</h3>
                 <p className="text-gray-500 mb-4">Frontend Developer</p>
@@ -127,7 +128,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-20 flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600">
+      <section className="relative py-20 flex items-center justify-center bg-gradient-to-r bg-[#a73c5a]">
         <div className="text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Let’s Build the Future Together</h2>
           <p className="mb-6">We’re ready to transform your ideas into digital reality.</p>

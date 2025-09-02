@@ -25,7 +25,7 @@ import { deletePost } from "@/app/dashboard/action"
  */
 export default function PostList({ posts }) {
   const [isDeleting, setIsDeleting] = useState(false)
-  const [editingPost, setEditingPost] = useState(null) // State to hold post being edited
+  const [editingPost, setEditingPost] = useState(null) 
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this post?")) {
@@ -34,9 +34,9 @@ export default function PostList({ posts }) {
     setIsDeleting(true)
     const result = await deletePost(id)
     if (result.success) {
-      toast.success(result.message) // Using sonner's toast.success
+      toast.success(result.message) 
     } else {
-      toast.error(result.message) // Using sonner's toast.error
+      toast.error(result.message) 
     }
     setIsDeleting(false)
   }

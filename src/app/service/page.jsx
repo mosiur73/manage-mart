@@ -47,6 +47,28 @@ export default function ServicePage() {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
 
+ // Add to cart function
+  async function handleAddToCart(product) {
+  try {
+    const res = await fetch("/api/Cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(product),
+    });
+
+    if (res.ok) {
+      alert("✅ Added to cart!");
+    } else {
+      alert("❌ Failed to add.");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+  
+
   return (
     <section className="container mx-auto px-6 py-12">
       <h1 className="text-4xl font-bold text-center mb-8">Our Products</h1>
@@ -134,7 +156,11 @@ export default function ServicePage() {
               </CardContent>
               <CardFooter className="p-4 pt-0">
                 <div className="flex gap-2 w-full">
-                  <Button className="flex-1">Add to Cart</Button>
+                  {/* <Button className="flex-1">Add to Cart</Button> */}
+                  <Button className="flex-1" onClick={() => handleAddToCart(product)}>
+                      Add to Cart
+                    </Button>
+                                      
                   <Button asChild variant="outline" className="flex-1 bg-transparent">
                     <Link href={`/service/${product.id}`} prefetch={false}>
                       Details

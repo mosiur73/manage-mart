@@ -1,10 +1,10 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs" // Import bcryptjs
+import bcrypt from "bcryptjs" 
 
-import connectDB from "./mongodb" // Import MongoDB connection
-import User from "../models/User" // Import User model
+import connectDB from "./mongodb" 
+import User from "../models/User" 
 
 // Check for required environment variables
 if (!process.env.GOOGLE_CLIENT_ID) {

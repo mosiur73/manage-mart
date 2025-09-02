@@ -11,33 +11,10 @@ export default function ProductDetails({ params }) {
     return <div className="text-center py-20">Product Not Found</div>
   }
 
+
+
   return (
-    // <div className="container mx-auto px-6 py-12">
-    //   <div className="grid md:grid-cols-2 gap-10">
-    //     <Image
-    //       src={product.img}
-    //       alt={product.name}
-    //       width={600}
-    //       height={500}
-    //       className="rounded-xl object-cover w-full"
-    //     />
-
-    //     <div>
-    //       <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-    //       <p className="text-gray-600 mb-2">{product.category} by {product.seller}</p>
-    //       <p className="text-2xl font-bold text-green-600 mb-4">${product.price}</p>
-    //       <p className="mb-6 text-gray-700">{product.description}</p>
-
-    //       <button className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800">
-    //         Add to Cart
-    //       </button>
-
-    //       <Link href="/service" className="ml-4 underline text-blue-600">
-    //         Back to Products
-    //       </Link>
-    //     </div>
-    //   </div>
-    // </div>
+   
      <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
         <div className="flex justify-center items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-6">
@@ -76,9 +53,10 @@ export default function ProductDetails({ params }) {
             </p>
           </div>
           <div className="gap-4 flex">
-            <Button size="lg" className="w-full md:w-auto">
-            Add to Cart
-          </Button>
+             <Button className="" >
+                      Add to Cart
+                    </Button>
+         
           <Button size="lg" className=" bg-gray-600 w-full md:w-auto">
             <Link href="/service" className="ml-4  text-white">
             Back to Products

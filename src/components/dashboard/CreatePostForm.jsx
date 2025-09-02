@@ -43,7 +43,7 @@ export default function CreatePostForm() {
         toast.success(state.message) // Using sonner's toast.success
         form.reset() // Clear form on success
       } else {
-        toast.error(state.message) // Using sonner's toast.error
+        toast.error(state.message) 
       }
     }
     // Apply server-side errors to form fields
@@ -55,7 +55,7 @@ export default function CreatePostForm() {
         })
       }
     }
-  }, [state, form]) // Dependencies for useEffect
+  }, [state, form]) 
 
   return (
     <Form {...form}>

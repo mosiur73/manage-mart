@@ -2,28 +2,50 @@
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
+
 export default function ContactPage() {
   return (
     <div className="w-full min-h-screen bg-gray-50 text-gray-800">
       {/* Hero Section */}
       <section
-        className="relative bg-cover bg-center h-[50vh]"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1600&q=80')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-          <motion.h1
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            className="text-5xl md:text-6xl font-bold text-white text-center"
-          >
-            Contact Us
-          </motion.h1>
-        </div>
-      </section>
+  className="relative bg-cover bg-center h-[70vh]"
+  style={{
+    backgroundImage: "url('/images/contact.jpg')",
+  }}
+>
+  <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-center px-6">
+    <motion.h1
+      initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+      className="text-5xl md:text-6xl font-bold text-white mb-4"
+    >
+      Contact Us
+    </motion.h1>
+
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.2, delay: 0.3 }}
+      className="text-lg md:text-xl text-gray-200 max-w-2xl"
+    >
+      We’d love to hear from you! Whether you have a question, feedback, or a project idea, 
+      our team is ready to connect and assist you.
+    </motion.p>
+
+    <motion.button
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.6 }}
+      className="mt-6 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-700 transition"
+    >
+      Get In Touch
+    </motion.button>
+  </div>
+</section>
+
+
+
 
       {/* Contact Info */}
       <section className="max-w-7xl mx-auto py-12 px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -38,7 +60,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.2 }}
-            className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition"
+            className="bg-[#FFDEAD] rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition"
           >
             <div className="flex justify-center mb-4 text-indigo-600">{item.icon}</div>
             <h3 className="font-semibold text-lg mb-2">{item.title}</h3>

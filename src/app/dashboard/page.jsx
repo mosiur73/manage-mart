@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Toaster } from "sonner"
 import { getPosts } from "./action"
 import Link from "next/link"
-import { Package, PlusCircle } from "lucide-react" // icons
+import { Package, PlusCircle } from "lucide-react" 
 
 export default async function DashboardPage() {
   const posts = await getPosts()

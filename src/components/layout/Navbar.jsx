@@ -33,6 +33,7 @@ const navigationItems = [
   { name: "Home", href: "/" },
   { name: "Dashboard", href: "/dashboard", protected: true },
   { name: "Products", href: "/service" },
+  { name: "My Product", href: "/myProduct" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ]
