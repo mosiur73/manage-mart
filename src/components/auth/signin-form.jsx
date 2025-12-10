@@ -162,7 +162,7 @@ export default function SignInForm() {
           <div className="text-center text-sm">
             <span className="text-muted-foreground">Demo credentials:</span>
             <br />
-            <span className="font-mono text-xs">admin@productHub.com / password123</span>
+            {/* <span className="font-mono text-xs">admin@productHub.com / password123</span> */}
           </div>
         </CardContent>
         <CardFooter>
