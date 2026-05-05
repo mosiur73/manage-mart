@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="space-y-4">
           <Link href="#" className="flex items-center justify-start" prefetch={false}>
             <MountainIcon className="h-8 w-8 text-primary-foreground" />
-            <span className="text-2xl font-bold text-primary-foreground ml-2">ProductFlow</span>
+            <span className="text-2xl font-bold text-primary-foreground ml-2">ProductHub</span>
           </Link>
           <p className="text-sm leading-relaxed">
             Streamline your product management workflow with intuitive tools for planning, tracking, and launching.
@@ -100,7 +100,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container mx-auto px-4 md:px-6 mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
-        <p>&copy; {new Date().getFullYear()} ProductFlow. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ProductHub. All rights reserved.</p>
       </div>
     </footer>
   )

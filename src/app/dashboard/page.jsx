@@ -1,69 +1,115 @@
 import { Suspense } from "react"
 import PostList from "@/components/dashboard/PostList"
 import CreatePostForm from "@/components/dashboard/CreatePostForm"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Toaster } from "sonner"
 import { getPosts } from "./action"
-import Link from "next/link"
-import { Package, PlusCircle } from "lucide-react" 
+import { Package, PlusCircle, TrendingUp, ShoppingCart } from "lucide-react"
 
 export default async function DashboardPage() {
   const posts = await getPosts()
 
+  const stats = [
+    {
+      label: "Total Products",
+      value: posts.length,
+      icon: Package,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+      change: "+2 this week",
+    },
+    {
+      label: "Active Orders",
+      value: 3,
+      icon: ShoppingCart,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      change: "+1 today",
+    },
+    {
+      label: "Revenue",
+      value: "$1,240",
+      icon: TrendingUp,
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      change: "+12% this month",
+    },
+  ]
+
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-200 text-white flex flex-col p-6 space-y-6">
-        <h2 className="text-2xl text-black font-bold tracking-tight mb-6">Dashboard</h2>
-        <nav className="flex flex-col space-y-4">
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-black text-xl hover:bg-gray-800 hover:text-white transition"
-          >
-            <Package size={20} /> All Products
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-black text-xl hover:bg-gray-800 hover:text-white transition"
-          >
-            <PlusCircle size={20} /> Create Product
-          </Link>
-        </nav>
-      </aside>
+    <>
+      <Toaster richColors position="top-right" />
 
-      {/* Main Content */}
-      <main className="flex-1 p-8 bg-gray-50">
-        <h1 className="text-4xl font-bold mb-10">Product Dashboard</h1>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Posts List */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-md">
-              <CardHeader>
-                <CardTitle>Existing Products/Posts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Suspense fallback={<div>Loading posts...</div>}>
-                  <PostList posts={posts} />
-                </Suspense>
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        {stats.map((s) => {
+          const Icon = s.icon
+          return (
+            <Card key={s.label} className="border border-gray-100 shadow-none">
+              <CardContent className="p-5 flex items-center gap-4">
+                <div className={`h-10 w-10 rounded-lg ${s.bg} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`h-5 w-5 ${s.color}`} />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-medium">{s.label}</p>
+                  <p className="text-xl font-bold text-gray-900 leading-tight">{s.value}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{s.change}</p>
+                </div>
               </CardContent>
             </Card>
-          </div>
+          )
+        })}
+      </div>
 
-          {/* Create Form */}
-          <div>
-            <Card className="shadow-md">
-              <CardHeader>
-                <CardTitle>Create New Product/Post</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CreatePostForm />
-              </CardContent>
-            </Card>
-          </div>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Product List — takes 2/3 */}
+        <div className="lg:col-span-2">
+          <Card className="border border-gray-100 shadow-none">
+            <CardHeader className="pb-3 border-b border-gray-50">
+              <CardTitle className="text-base font-semibold text-gray-900">
+                All Products
+              </CardTitle>
+              <CardDescription className="text-xs text-gray-400">
+                {posts.length} product{posts.length !== 1 ? "s" : ""} total
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Suspense
+                fallback={
+                  <div className="flex items-center justify-center py-12 text-sm text-gray-400">
+                    Loading...
+                  </div>
+                }
+              >
+                <PostList posts={posts} />
+              </Suspense>
+            </CardContent>
+          </Card>
         </div>
-        <Toaster />
-      </main>
-    </div>
+
+        {/* Create Form — takes 1/3 */}
+        <div>
+          <Card className="border border-gray-100 shadow-none">
+            <CardHeader className="pb-3 border-b border-gray-50">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-md bg-blue-600 flex items-center justify-center">
+                  <PlusCircle className="h-3.5 w-3.5 text-white" />
+                </div>
+                <CardTitle className="text-base font-semibold text-gray-900">
+                  New Product
+                </CardTitle>
+              </div>
+              <CardDescription className="text-xs text-gray-400 mt-1">
+                Fill in the details to add a product
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <CreatePostForm />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </>
   )
 }
