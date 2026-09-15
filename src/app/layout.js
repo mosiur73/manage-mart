@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarAuth from "@/components/layout/Navbar";
 import AuthProvider from "@/components/auth-provider";
 import Footer from "@/components/layout/Footer";
+import { Toaster } from "sonner";
 
 
 
@@ -30,7 +31,8 @@ export default function RootLayout({ children }) {
       >
        
       <AuthProvider>
-        <NavbarAuth></NavbarAuth>  
+        <Toaster richColors position="top-right" />
+        <NavbarAuth></NavbarAuth>
         {children}
         <Footer></Footer>
         </AuthProvider>

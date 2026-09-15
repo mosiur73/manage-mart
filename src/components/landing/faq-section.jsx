@@ -25,7 +25,7 @@ export default function FAQSection() {
               Frequently Asked Questions
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Find answers to the most common questions about ProductFlow.
+              Find answers to the most common questions about Manage Mart.
             </p>
           </div>
         </motion.div>
@@ -40,24 +40,24 @@ export default function FAQSection() {
         >
           {[
             {
-              q: "What is ProductFlow?",
-              a: "ProductFlow is a comprehensive product management platform designed to help teams plan, track, and launch products more efficiently.",
+              q: "What is Manage Mart?",
+              a: "Manage Mart is a multi-vendor marketplace — anyone can shop, and approved sellers can list and manage their own products from a dedicated dashboard.",
             },
             {
-              q: "Is there a free trial available?",
-              a: "Yes, we offer a 14-day free trial for all new users. No credit card required to get started.",
+              q: "How do I become a seller?",
+              a: "Check \"I want to sell products\" when you sign up. You'll get access to a full seller dashboard to list products, manage orders, and view analytics.",
             },
             {
-              q: "Can I integrate ProductFlow with other tools?",
-              a: "ProductFlow offers integrations with popular tools like Jira, Slack, and GitHub. More integrations are coming soon!",
+              q: "Is checkout secure?",
+              a: "Yes — all payments are processed through Stripe. Manage Mart never sees or stores your card details.",
             },
             {
-              q: "What kind of support do you offer?",
-              a: "We offer email support for all plans, with priority and dedicated support options available for Pro and Enterprise plans.",
+              q: "Can I trust the product reviews?",
+              a: "Yes — only customers who actually purchased a product can leave a review, so every rating is verified.",
             },
             {
-              q: "Is my data secure with ProductFlow?",
-              a: "Yes, we take data security very seriously. ProductFlow uses industry-standard encryption and security protocols to protect your data.",
+              q: "What if I need to cancel or return an order?",
+              a: "You can request a cancellation from your order history any time before it ships. Sellers process refunds directly through Stripe.",
             },
           ].map((item, idx) => (
             <motion.div

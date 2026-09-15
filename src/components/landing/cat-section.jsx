@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
 export default function CTASection() {
@@ -8,29 +7,23 @@ export default function CTASection() {
       id="cta"
       className="w-full py-12  border-t bg-gradient-to-r from-primary-foreground to-primary-background animate-fade-in"
     >
-      <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+      <div className="container grid items-center justify-center gap-6 px-4 text-center md:px-6">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-            Ready to Transform Your Product Workflow?
+            Ready to Start Shopping — or Selling?
           </h2>
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-            Join thousands of product teams who are building better products with ProductFlow.
+            Join Manage Mart today. Browse thousands of products, or set up your seller account
+            in minutes.
           </p>
         </div>
-        <div className="mx-auto w-full max-w-2xl space-y-2">
-          <form className="flex gap-2">
-            <Input type="email" placeholder="Enter your email" className="max-w-lg flex-1" />
-            <Link href="/auth/signup">
-            <Button type="submit">Sign Up</Button>
-            </Link>
-          </form>
-          <p className="text-xs text-muted-foreground">
-            Sign up to get started. By signing up, you agree to our{" "}
-            <Link href="#" className="underline underline-offset-2" prefetch={false}>
-              Terms &amp; Conditions
-            </Link>
-            .
-          </p>
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Button size="lg" asChild>
+            <Link href="/auth/signup">Create Free Account</Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild>
+            <Link href="/service">Browse Products</Link>
+          </Button>
         </div>
       </div>
     </section>

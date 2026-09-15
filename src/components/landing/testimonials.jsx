@@ -23,8 +23,8 @@ export default function TestimonialsSection() {
             What Our Users Say
           </h2>
           <p className="max-w-[800px] text-muted-foreground text-lg md:text-xl">
-            Hear directly from product managers and teams who have transformed their
-            workflow with <span className="font-semibold text-foreground">ProductFlow</span>.
+            Hear from buyers and sellers who use{" "}
+            <span className="font-semibold text-foreground">Manage Mart</span> every day.
           </p>
         </div>
 
@@ -32,28 +32,28 @@ export default function TestimonialsSection() {
         <div className="mx-auto grid max-w-6xl gap-8 py-16 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
-              name: "Jane Doe",
-              role: "Lead Product Manager, Acme Corp",
+              name: "Sarah Chen",
+              role: "Verified Buyer",
               img: "/placeholder.svg?height=40&width=40",
-              fallback: "JD",
+              fallback: "SC",
               quote:
-                "ProductFlow has revolutionized how our team manages features. The dashboards are incredibly insightful!",
+                "Found exactly what I needed in minutes. The reviews are genuinely helpful since I know they're from real buyers.",
             },
             {
-              name: "Alex Smith",
-              role: "Head of Product, Global Innovations",
+              name: "Marcus Reed",
+              role: "Seller, Reed's Outdoor Gear",
               img: "/placeholder.svg?height=40&width=40",
-              fallback: "AS",
+              fallback: "MR",
               quote:
-                "The collaboration features are a game-changer. Our cross-functional teams are more aligned than ever.",
+                "The AI description tool saves me so much time — I can list a new product in under two minutes.",
             },
             {
-              name: "Maria Brown",
-              role: "Product Lead, Tech Solutions Inc.",
+              name: "Priya Patel",
+              role: "Verified Buyer",
               img: "/placeholder.svg?height=40&width=40",
-              fallback: "MB",
+              fallback: "PP",
               quote:
-                "We've cut down our release cycles by 30% thanks to ProductFlow's intuitive release management.",
+                "Checkout was fast and I got an email the moment my order shipped. Exactly what I want from online shopping.",
             },
           ].map((t, i) => (
             <Card

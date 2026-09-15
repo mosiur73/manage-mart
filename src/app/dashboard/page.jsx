@@ -1,38 +1,38 @@
 import { Suspense } from "react"
-import PostList from "@/components/dashboard/PostList"
-import CreatePostForm from "@/components/dashboard/CreatePostForm"
+import ProductList from "@/components/dashboard/ProductList"
+import CreateProductForm from "@/components/dashboard/CreateProductForm"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Toaster } from "sonner"
-import { getPosts } from "./action"
+import { getDashboardProducts } from "./action"
+import { getOrderStats } from "./order-actions"
 import { Package, PlusCircle, TrendingUp, ShoppingCart } from "lucide-react"
 
 export default async function DashboardPage() {
-  const posts = await getPosts()
+  const [products, orderStats] = await Promise.all([getDashboardProducts(), getOrderStats()])
 
   const stats = [
     {
       label: "Total Products",
-      value: posts.length,
+      value: products.length,
       icon: Package,
       color: "text-blue-600",
       bg: "bg-blue-50",
-      change: "+2 this week",
     },
     {
       label: "Active Orders",
-      value: 3,
+      value: orderStats.activeOrders,
       icon: ShoppingCart,
       color: "text-emerald-600",
       bg: "bg-emerald-50",
-      change: "+1 today",
+      change: "Pending + paid",
     },
     {
       label: "Revenue",
-      value: "$1,240",
+      value: `$${orderStats.revenue.toFixed(2)}`,
       icon: TrendingUp,
       color: "text-violet-600",
       bg: "bg-violet-50",
-      change: "+12% this month",
+      change: "Paid + shipped orders",
     },
   ]
 
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
                 All Products
               </CardTitle>
               <CardDescription className="text-xs text-gray-400">
-                {posts.length} product{posts.length !== 1 ? "s" : ""} total
+                {products.length} product{products.length !== 1 ? "s" : ""} total
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
                   </div>
                 }
               >
-                <PostList posts={posts} />
+                <ProductList products={products} />
               </Suspense>
             </CardContent>
           </Card>
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-4">
-              <CreatePostForm />
+              <CreateProductForm />
             </CardContent>
           </Card>
         </div>

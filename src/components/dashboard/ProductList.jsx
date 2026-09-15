@@ -3,19 +3,19 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import EditPostDialog from "./EditPostDialog"
+import EditProductDialog from "./EditProductDialog"
 import Link from "next/link"
 import { Trash2, Pencil, Eye } from "lucide-react"
-import { deletePost } from "@/app/dashboard/action"
+import { deleteProduct } from "@/app/dashboard/action"
 
-export default function PostList({ posts }) {
+export default function ProductList({ products }) {
   const [isDeleting, setIsDeleting] = useState(null)
-  const [editingPost, setEditingPost] = useState(null)
+  const [editingProduct, setEditingProduct] = useState(null)
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this product?")) return
     setIsDeleting(id)
-    const result = await deletePost(id)
+    const result = await deleteProduct(id)
     if (result.success) {
       toast.success(result.message)
     } else {
@@ -24,7 +24,7 @@ export default function PostList({ posts }) {
     setIsDeleting(null)
   }
 
-  if (posts.length === 0) {
+  if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
@@ -44,27 +44,27 @@ export default function PostList({ posts }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left text-xs font-medium text-gray-400 px-5 py-3 uppercase tracking-wide">Title</th>
-              <th className="text-left text-xs font-medium text-gray-400 px-3 py-3 uppercase tracking-wide">Slug</th>
-              <th className="text-left text-xs font-medium text-gray-400 px-3 py-3 uppercase tracking-wide hidden sm:table-cell">Created</th>
+              <th className="text-left text-xs font-medium text-gray-400 px-5 py-3 uppercase tracking-wide">Name</th>
+              <th className="text-left text-xs font-medium text-gray-400 px-3 py-3 uppercase tracking-wide hidden sm:table-cell">Category</th>
+              <th className="text-left text-xs font-medium text-gray-400 px-3 py-3 uppercase tracking-wide">Price</th>
+              <th className="text-left text-xs font-medium text-gray-400 px-3 py-3 uppercase tracking-wide hidden md:table-cell">Stock</th>
               <th className="text-right text-xs font-medium text-gray-400 px-5 py-3 uppercase tracking-wide">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {posts.map((post) => (
-              <tr key={post._id} className="hover:bg-gray-50/50 transition-colors group">
+            {products.map((product) => (
+              <tr key={product._id} className="hover:bg-gray-50/50 transition-colors group">
                 <td className="px-5 py-3.5 font-medium text-gray-800 max-w-[180px] truncate">
-                  {post.title}
+                  {product.name}
                 </td>
-                <td className="px-3 py-3.5 text-gray-500 font-mono text-xs max-w-[120px] truncate">
-                  {post.slug}
+                <td className="px-3 py-3.5 text-gray-500 text-xs hidden sm:table-cell">
+                  {product.category?.name}
                 </td>
-                <td className="px-3 py-3.5 text-gray-400 text-xs hidden sm:table-cell">
-                  {new Date(post.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                <td className="px-3 py-3.5 text-gray-800 font-semibold">
+                  ${Number(product.price).toFixed(2)}
+                </td>
+                <td className="px-3 py-3.5 text-gray-500 hidden md:table-cell">
+                  {product.stock}
                 </td>
                 <td className="px-5 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-1">
@@ -74,7 +74,7 @@ export default function PostList({ posts }) {
                       size="icon"
                       className="h-7 w-7 text-gray-400 hover:text-blue-600 hover:bg-blue-50"
                     >
-                      <Link href={`/post/${post.slug}`} prefetch={false}>
+                      <Link href={`/service/${product._id}`} prefetch={false}>
                         <Eye className="h-3.5 w-3.5" />
                       </Link>
                     </Button>
@@ -82,7 +82,7 @@ export default function PostList({ posts }) {
                       variant="ghost"
                       size="icon"
                       className="h-7 w-7 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50"
-                      onClick={() => setEditingPost(post)}
+                      onClick={() => setEditingProduct(product)}
                     >
                       <Pencil className="h-3.5 w-3.5" />
                     </Button>
@@ -90,8 +90,8 @@ export default function PostList({ posts }) {
                       variant="ghost"
                       size="icon"
                       className="h-7 w-7 text-gray-400 hover:text-red-600 hover:bg-red-50"
-                      onClick={() => handleDelete(post._id)}
-                      disabled={isDeleting === post._id}
+                      onClick={() => handleDelete(product._id)}
+                      disabled={isDeleting === product._id}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
@@ -103,11 +103,11 @@ export default function PostList({ posts }) {
         </table>
       </div>
 
-      {editingPost && (
-        <EditPostDialog
-          post={editingPost}
-          isOpen={!!editingPost}
-          onClose={() => setEditingPost(null)}
+      {editingProduct && (
+        <EditProductDialog
+          product={editingProduct}
+          isOpen={!!editingProduct}
+          onClose={() => setEditingProduct(null)}
         />
       )}
     </>

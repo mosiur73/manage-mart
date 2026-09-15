@@ -39,7 +39,10 @@ export const authOptions = {
 
         await connectDB() // Connect to MongoDB
 
-        const user = await User.findOne({ email: credentials.email })
+        // Normalize — the schema's `lowercase: true` only applies on save, not on
+        // query filters, so "User@x.com" wouldn't otherwise match a stored "user@x.com".
+        const normalizedEmail = credentials.email.trim().toLowerCase()
+        const user = await User.findOne({ email: normalizedEmail })
 
         if (!user) {
           return null // User not found
@@ -63,8 +66,28 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
+    async jwt({ token, user, account }) {
+      // Google sign-in has no `adapter` configured, so NextAuth never persists a User
+      // document for it — `user` here is just the raw Google profile (no `role`/`id`
+      // that map to our DB). Find-or-create the matching User so Google-authenticated
+      // sessions get a real role; without this every Google user would fail the
+      // dashboard's role check in src/middleware.js.
+      if (account?.provider === "google") {
+        await connectDB()
+        const normalizedEmail = token.email?.trim().toLowerCase()
+        let dbUser = await User.findOne({ email: normalizedEmail })
+        if (!dbUser) {
+          const randomPassword = await bcrypt.hash(crypto.randomUUID(), 10)
+          dbUser = await User.create({
+            name: token.name,
+            email: normalizedEmail,
+            password: randomPassword,
+            role: "customer",
+          })
+        }
+        token.role = dbUser.role
+        token.id = dbUser._id.toString()
+      } else if (user) {
         token.role = user.role
         token.id = user.id // Store user ID in token
       }

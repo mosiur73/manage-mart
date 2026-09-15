@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import img from "../../../public/images/hero2.jpg";
 
 export default function AboutSection() {
@@ -38,8 +39,8 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
               >
-                Empowering Product Teams <br />{" "}
-                <span className="text-primary">Worldwide</span>
+                Built for Buyers <br />{" "}
+                <span className="text-primary">and Sellers</span>
               </motion.h2>
 
               <motion.p
@@ -49,13 +50,11 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 className="max-w-xl text-lg text-gray-600 leading-relaxed"
               >
-                At{" "}
-                <span className="font-semibold text-primary">ProductFlow</span>
-                , we believe that great products are built by empowered teams.
-                Our platform removes friction from product management, so you
-                can focus on innovation and delivering value. We’re committed to
-                building intuitive, powerful, and scalable solutions for teams
-                of all sizes.
+                At <span className="font-semibold text-primary">Manage Mart</span>, we believe
+                online shopping should be simple for buyers and effortless for sellers. Our
+                platform brings together secure payments, AI-assisted listings, and verified
+                reviews — so sellers can focus on their products, and buyers can shop with
+                confidence.
               </motion.p>
             </div>
 
@@ -66,20 +65,22 @@ export default function AboutSection() {
               viewport={{ once: true }}
               className="flex gap-4 pt-4"
             >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="rounded-2xl bg-primary px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition"
-              >
-                Learn More
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="rounded-2xl border border-primary px-6 py-3 text-primary font-medium hover:bg-primary/5 transition"
-              >
-                Contact Us
-              </motion.button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/service"
+                  className="inline-block rounded-2xl bg-primary px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition"
+                >
+                  Browse Products
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/auth/signup"
+                  className="inline-block rounded-2xl border border-primary px-6 py-3 text-primary font-medium hover:bg-primary/5 transition"
+                >
+                  Start Selling
+                </Link>
+              </motion.div>
             </motion.div>
           </motion.div>
 

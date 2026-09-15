@@ -1,4 +1,4 @@
-import CreatePostForm from "@/components/dashboard/CreatePostForm"
+import CreateProductForm from "@/components/dashboard/CreateProductForm"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Toaster } from "sonner"
 import { PlusCircle, Lightbulb } from "lucide-react"
@@ -36,7 +36,7 @@ export default function CreateProductPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-5">
-              <CreatePostForm />
+              <CreateProductForm />
             </CardContent>
           </Card>
         </div>

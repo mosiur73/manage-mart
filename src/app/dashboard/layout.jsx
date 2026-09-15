@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import {
   LayoutDashboard,
   Package,
@@ -10,6 +11,8 @@ import {
   ShoppingCart,
   BarChart3,
   Settings,
+  Tag,
+  Award,
   ChevronLeft,
   ChevronRight,
   Bell,
@@ -43,6 +46,18 @@ const sidebarItems = [
     badge: "3",
   },
   {
+    label: "Categories",
+    href: "/dashboard/categories",
+    icon: Tag,
+    adminOnly: true,
+  },
+  {
+    label: "Brands",
+    href: "/dashboard/brands",
+    icon: Award,
+    adminOnly: true,
+  },
+  {
     label: "Analytics",
     href: "/dashboard/analytics",
     icon: BarChart3,
@@ -57,6 +72,8 @@ const sidebarItems = [
 export default function DashboardLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const visibleItems = sidebarItems.filter((item) => !item.adminOnly || session?.user?.role === "admin")
 
   const isActive = (item) => {
     if (item.exact) return pathname === item.href
@@ -89,7 +106,7 @@ export default function DashboardLayout({ children }) {
 
         {/* Nav Items */}
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-  {sidebarItems.map((item) => {
+  {visibleItems.map((item) => {
     const active = isActive(item)
     const Icon = item.icon
 
@@ -140,7 +157,7 @@ export default function DashboardLayout({ children }) {
         <div className="sticky top-0 z-30 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
           <div>
             <h1 className="text-base font-semibold text-gray-900">
-              {sidebarItems.find((i) => isActive(i))?.label || "Dashboard"}
+              {visibleItems.find((i) => isActive(i))?.label || "Dashboard"}
             </h1>
           </div>
           <div className="flex items-center gap-2">

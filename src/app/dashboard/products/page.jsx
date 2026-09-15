@@ -1,8 +1,8 @@
 import { Suspense } from "react"
-import PostList from "@/components/dashboard/PostList"
+import ProductList from "@/components/dashboard/ProductList"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Toaster } from "sonner"
-import { getPosts } from "@/app/dashboard/action"
+import { getDashboardProducts } from "@/app/dashboard/action"
 import { Package } from "lucide-react"
 
 export const metadata = {
@@ -10,7 +10,7 @@ export const metadata = {
 }
 
 export default async function ProductsPage() {
-  const posts = await getPosts()
+  const products = await getDashboardProducts()
 
   return (
     <>
@@ -24,7 +24,7 @@ export default async function ProductsPage() {
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">All Products</h2>
-            <p className="text-sm text-gray-400">{posts.length} product{posts.length !== 1 ? "s" : ""} in total</p>
+            <p className="text-sm text-gray-400">{products.length} product{products.length !== 1 ? "s" : ""} in total</p>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default async function ProductsPage() {
               </div>
             }
           >
-            <PostList posts={posts} />
+            <ProductList products={products} />
           </Suspense>
         </CardContent>
       </Card>

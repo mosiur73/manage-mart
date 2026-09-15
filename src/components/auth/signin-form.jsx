@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { signIn, getSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react"
 
@@ -20,6 +20,8 @@ export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -39,7 +41,7 @@ export default function SignInForm() {
         // Get the updated session
         const session = await getSession()
         if (session) {
-          router.push("/")
+          router.push(callbackUrl)
           router.refresh()
         }
       }
@@ -53,7 +55,7 @@ export default function SignInForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/" })
+      await signIn("google", { callbackUrl })
     } catch (error) {
       setError("Failed to sign in with Google")
       setIsLoading(false)
@@ -64,7 +66,7 @@ export default function SignInForm() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in to ProductHub</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Sign in to Manage Mart</CardTitle>
           <CardDescription className="text-center">
             Enter your email and password to access your account
           </CardDescription>

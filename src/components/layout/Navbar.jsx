@@ -31,9 +31,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const navigationItems = [
   { name: "Home", href: "/" },
-  { name: "Dashboard", href: "/dashboard", protected: true },
+  { name: "Dashboard", href: "/dashboard", roles: ["seller", "admin"] },
   { name: "Products", href: "/service" },
-  { name: "My Product", href: "/myProduct" },
+  { name: "My Cart", href: "/myProduct" },
+  { name: "My Orders", href: "/orders", authRequired: true },
+  { name: "Wishlist", href: "/wishlist", authRequired: true },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ]
@@ -56,7 +58,11 @@ export default function NavbarAuth() {
     )
   }
 
-  const visibleNavItems = navigationItems.filter((item) => !item.protected || (item.protected && session))
+  const visibleNavItems = navigationItems.filter((item) => {
+    if (item.roles) return session && item.roles.includes(session.user?.role)
+    if (item.authRequired) return !!session
+    return true
+  })
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -69,7 +75,7 @@ export default function NavbarAuth() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-primary-foreground">
               <Package className="h-4 w-4" />
             </div>
-            <span className="font-bold inline-block">ProductHub</span>
+            <span className="font-bold inline-block">Manage Mart</span>
           </Link>
 
           {/* Desktop Navigation - Moved next to logo or centered based on preference */}
@@ -119,7 +125,7 @@ export default function NavbarAuth() {
                     </Avatar>
                     <div className="hidden lg:flex flex-col items-start leading-tight">
                       <span className="text-sm font-semibold">{session.user?.name}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase">{session.user?.role || "User"}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase">{session.user?.role || "customer"}</span>
                     </div>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>

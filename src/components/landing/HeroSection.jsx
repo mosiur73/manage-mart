@@ -46,17 +46,18 @@ export default function HeroSection() {
           
           <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium text-white backdrop-blur-md mb-6 animate-fade-in">
             <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2"></span>
-            New: Analytics 2.0 is here
+            New: AI-generated product descriptions for sellers
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
-            Empower Your <br /> 
-            <span className="text-blue-500">Product</span> Management
+            Shop More. <br />
+            <span className="text-blue-500">Sell</span> Smarter.
           </h1>
 
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-10">
-            The all-in-one platform designed to streamline workflows, enhance team collaboration, and drive 
-            exponential growth with data-driven insights.
+            Manage Mart is a multi-vendor marketplace — browse thousands of products from
+            independent sellers, or list your own in minutes with secure checkout, verified
+            reviews, and real order tracking built in.
           </p>
 
           <div className="flex flex-wrap gap-4">

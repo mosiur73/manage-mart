@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
-import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Loader2, Store } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +19,7 @@ export default function SignUpForm() {
     password: "",
     confirmPassword: "",
   })
+  const [wantsToSell, setWantsToSell] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -59,6 +60,7 @@ export default function SignUpForm() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          role: wantsToSell ? "seller" : "customer",
         }),
       })
 
@@ -111,7 +113,7 @@ export default function SignUpForm() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create your account</CardTitle>
-          <CardDescription className="text-center">Enter your details to get started with ProductHub</CardDescription>
+          <CardDescription className="text-center">Enter your details to get started with Manage Mart</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {error && (
@@ -245,6 +247,24 @@ export default function SignUpForm() {
                 </Button>
               </div>
             </div>
+
+            <label className="flex items-start gap-2 rounded-md border p-3 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={wantsToSell}
+                onChange={(e) => setWantsToSell(e.target.checked)}
+                className="mt-0.5"
+              />
+              <span className="flex items-start gap-2">
+                <Store className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+                <span>
+                  <span className="font-medium">I want to sell products</span>
+                  <span className="block text-xs text-muted-foreground">
+                    Gives you access to the seller dashboard to list and manage products.
+                  </span>
+                </span>
+              </span>
+            </label>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
