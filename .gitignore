@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# user-uploaded avatars (local dev storage)
+/public/uploads/
+
 # production
 /build
 

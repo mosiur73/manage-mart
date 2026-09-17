@@ -110,8 +110,15 @@ async function main() {
     const data = {
       name: p.name,
       slug,
+      sku: slug.toUpperCase().slice(0, 60),
+      shortDescription: p.description.slice(0, 150),
       description: p.description,
-      price: p.price,
+      tags: [],
+      purchasePrice: 0,
+      // No discount in the seed data — regular and selling price start equal.
+      regularPrice: p.price,
+      sellingPrice: p.price,
+      lowStockThreshold: 5,
       category: categoryId,
       brand: brandId,
       images: [p.img],

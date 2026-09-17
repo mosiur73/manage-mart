@@ -4,7 +4,7 @@ import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { requestCancelOrder } from "@/app/orders/actions"
+import { requestCancelOrder } from "@/app/(site)/orders/actions"
 
 /**
  * @param {{ orderId: string, status: string, cancellationRequested: boolean }} props

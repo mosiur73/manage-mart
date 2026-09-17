@@ -15,6 +15,14 @@ const CategorySchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    image: {
+      type: String,
+      default: "",
+    },
+    status: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 )

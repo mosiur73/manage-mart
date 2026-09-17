@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed:products": "node scripts/seed-products.mjs",
+    "seed:users": "node scripts/seed-users.mjs",
     "make-admin": "node scripts/make-admin.mjs"
   },
   "dependencies": {

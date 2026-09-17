@@ -19,6 +19,7 @@ export default function WishlistButton({ product, initialWishlisted = false, cla
         const res = await fetch(`/api/wishlist?productId=${product._id}`, { method: "DELETE" })
         if (res.ok) {
           setWishlisted(false)
+          window.dispatchEvent(new Event("wishlist:updated"))
           toast.success("Removed from wishlist")
         } else {
           const data = await res.json().catch(() => ({}))
@@ -31,13 +32,14 @@ export default function WishlistButton({ product, initialWishlisted = false, cla
           body: JSON.stringify({
             productId: product._id,
             name: product.name,
-            price: product.price,
+            price: product.sellingPrice,
             img: product.images?.[0],
             category: product.category?.name,
           }),
         })
         if (res.ok) {
           setWishlisted(true)
+          window.dispatchEvent(new Event("wishlist:updated"))
           toast.success("Added to wishlist")
         } else if (res.status === 401) {
           toast.error("Sign in to save items to your wishlist")

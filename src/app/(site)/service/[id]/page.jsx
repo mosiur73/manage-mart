@@ -3,8 +3,8 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { StarIcon } from "lucide-react"
 import { getProductById } from "@/app/dashboard/action"
-import { getProductReviews, getReviewGate } from "@/app/service/review-actions"
-import { getWishlistedProductIds } from "@/app/service/wishlist-actions"
+import { getProductReviews, getReviewGate } from "@/app/(site)/service/review-actions"
+import { getWishlistedProductIds } from "@/app/(site)/service/wishlist-actions"
 import AddToCartButton from "@/components/service/AddToCartButton"
 import ProductGallery from "@/components/service/ProductGallery"
 import ProductReviews from "@/components/service/ProductReviews"
@@ -31,7 +31,13 @@ export default async function ProductDetails({ params }) {
         <ProductGallery images={product.images} alt={product.name} />
         <div className="space-y-6">
           <h1 className="text-4xl font-bold">{product.name}</h1>
-          <p className="text-2xl font-semibold text-primary">${product.price.toFixed(2)}</p>
+          <div className="flex items-baseline gap-3">
+            <p className="text-2xl font-semibold text-primary">${product.sellingPrice.toFixed(2)}</p>
+            {product.regularPrice > product.sellingPrice && (
+              <p className="text-lg text-muted-foreground line-through">${product.regularPrice.toFixed(2)}</p>
+            )}
+          </div>
+          {product.sku && <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>}
           <div className="flex items-center text-sm text-muted-foreground">
             <StarIcon className="w-5 h-5 fill-yellow-400 text-yellow-400 mr-1" />
             <span>
@@ -54,6 +60,11 @@ export default async function ProductDetails({ params }) {
               <span className="font-medium">Shipping Cost:</span>{" "}
               {!product.shipping ? "Free" : `$${product.shipping.toFixed(2)}`}
             </p>
+            {product.tags?.length > 0 && (
+              <p>
+                <span className="font-medium">Tags:</span> {product.tags.join(", ")}
+              </p>
+            )}
           </div>
           <div className="gap-4 flex">
             <AddToCartButton product={product} />

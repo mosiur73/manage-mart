@@ -4,7 +4,7 @@ import { useState } from "react"
 import { signIn, getSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, Loader2, ShieldCheck, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,11 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
+
+const DEMO_ACCOUNTS = {
+  admin: { email: "admin@managemart.local", password: "Passw0rd!123" },
+  customer: { email: "tanvir.customer@managemart.local", password: "Passw0rd!123" },
+}
 
 export default function SignInForm() {
   const [email, setEmail] = useState("")
@@ -21,7 +26,9 @@ export default function SignInForm() {
   const [error, setError] = useState("")
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+  // Only an explicit callbackUrl (e.g. bounced here from a protected page) should
+  // override the role-based default below — "/" is just the absence of one.
+  const explicitCallbackUrl = searchParams.get("callbackUrl")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -41,7 +48,9 @@ export default function SignInForm() {
         // Get the updated session
         const session = await getSession()
         if (session) {
-          router.push(callbackUrl)
+          const isStaff = ["admin", "seller"].includes(session.user?.role)
+          const destination = explicitCallbackUrl || (isStaff ? "/dashboard" : "/")
+          router.push(destination)
           router.refresh()
         }
       }
@@ -52,10 +61,17 @@ export default function SignInForm() {
     }
   }
 
+  const fillDemoAccount = (role) => {
+    const account = DEMO_ACCOUNTS[role]
+    setEmail(account.email)
+    setPassword(account.password)
+    setError("")
+  }
+
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl })
+      await signIn("google", { callbackUrl: explicitCallbackUrl || "/" })
     } catch (error) {
       setError("Failed to sign in with Google")
       setIsLoading(false)
@@ -161,10 +177,32 @@ export default function SignInForm() {
             </Button>
           </form>
 
-          <div className="text-center text-sm">
-            <span className="text-muted-foreground">Demo credentials:</span>
-            <br />
-            {/* <span className="font-mono text-xs">admin@productHub.com / password123</span> */}
+          <div className="space-y-2">
+            <p className="text-center text-xs text-muted-foreground">Or fill in a demo account</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="bg-transparent"
+                onClick={() => fillDemoAccount("admin")}
+                disabled={isLoading}
+              >
+                <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
+                Demo Admin
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="bg-transparent"
+                onClick={() => fillDemoAccount("customer")}
+                disabled={isLoading}
+              >
+                <User className="mr-1.5 h-3.5 w-3.5" />
+                Demo Customer
+              </Button>
+            </div>
           </div>
         </CardContent>
         <CardFooter>

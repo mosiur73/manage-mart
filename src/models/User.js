@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
     enum: ['customer', 'seller', 'admin'],
     default: 'customer',
   },
+  image: {
+    type: String,
+    default: '',
+  },
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);

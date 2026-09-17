@@ -60,13 +60,21 @@ export const authOptions = {
           id: user._id.toString(), // Convert ObjectId to string
           email: user.email,
           name: user.name,
+          image: user.image || "",
           role: user.role,
         }
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      // Client called useSession().update({ name, image }) after a profile edit —
+      // merge the new values into the token so they show up without a full re-login.
+      if (trigger === "update") {
+        if (session?.name) token.name = session.name
+        if (session?.image !== undefined) token.picture = session.image
+      }
+
       // Google sign-in has no `adapter` configured, so NextAuth never persists a User
       // document for it — `user` here is just the raw Google profile (no `role`/`id`
       // that map to our DB). Find-or-create the matching User so Google-authenticated
@@ -87,6 +95,7 @@ export const authOptions = {
         }
         token.role = dbUser.role
         token.id = dbUser._id.toString()
+        if (dbUser.image) token.picture = dbUser.image
       } else if (user) {
         token.role = user.role
         token.id = user.id // Store user ID in token

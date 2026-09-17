@@ -19,7 +19,7 @@ export default function AddToCartButton({ product, className, size }) {
         body: JSON.stringify({
           productId: product._id,
           name: product.name,
-          price: product.price,
+          price: product.sellingPrice,
           img: product.images?.[0],
           category: product.category?.name,
         }),
@@ -27,6 +27,7 @@ export default function AddToCartButton({ product, className, size }) {
 
       if (res.ok) {
         toast.success(`${product.name} added to cart`)
+        window.dispatchEvent(new Event("cart:updated"))
       } else {
         const data = await res.json().catch(() => ({}))
         toast.error(data.message || "Failed to add to cart")

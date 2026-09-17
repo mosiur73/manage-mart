@@ -2,7 +2,6 @@
 
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { anthropic } from "@/lib/anthropic"
 import { checkRateLimit } from "@/lib/rate-limit"
 
 const SELLER_ROLES = ["seller", "admin"]
@@ -31,6 +30,12 @@ export async function generateProductDescription({ name, category, keywords }) {
   }
 
   try {
+    // Dynamically imported so this action's ANTHROPIC_API_KEY requirement doesn't
+    // leak into other actions bundled into the same client chunk (createProduct,
+    // getCategories, getBrands, etc. — Next.js groups all server actions a page's
+    // components reference into one flight-action bundle, so a static import here
+    // would make a missing key break category/brand loading too, not just AI gen).
+    const { anthropic } = await import("@/lib/anthropic")
     const response = await anthropic.messages.create({
       model: "claude-opus-5",
       max_tokens: 500,

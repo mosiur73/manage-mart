@@ -1,10 +1,10 @@
 import mongoose from "mongoose"
 
-const BrandSchema = new mongoose.Schema(
+const TagSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Please provide a brand name."],
+      required: [true, "Please provide a tag name."],
       trim: true,
       maxlength: [80, "Name cannot be more than 80 characters"],
     },
@@ -27,4 +27,4 @@ const BrandSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-export default mongoose.models.Brand || mongoose.model("Brand", BrandSchema)
+export default mongoose.models.Tag || mongoose.model("Tag", TagSchema)

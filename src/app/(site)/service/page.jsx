@@ -1,5 +1,5 @@
 import { getStorefrontProducts } from "@/app/dashboard/action"
-import { getWishlistedProductIds } from "@/app/service/wishlist-actions"
+import { getWishlistedProductIds } from "@/app/(site)/service/wishlist-actions"
 import ProductFilters from "@/components/service/ProductFilters"
 import ProductCard from "@/components/service/ProductCard"
 import Pagination from "@/components/service/Pagination"

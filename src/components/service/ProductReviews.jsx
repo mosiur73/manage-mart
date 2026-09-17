@@ -7,7 +7,7 @@ import { StarIcon, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { createReview, deleteReview } from "@/app/service/review-actions"
+import { createReview, deleteReview } from "@/app/(site)/service/review-actions"
 
 function StarPicker({ value, onChange, disabled }) {
   return (

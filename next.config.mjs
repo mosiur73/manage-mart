@@ -6,6 +6,7 @@ const nextConfig = {
       "images.remotePatterns",
       "i.ibb.co.com",
       "res.cloudinary.com",
+      "cdn.dummyjson.com",
     ],
 }
 };

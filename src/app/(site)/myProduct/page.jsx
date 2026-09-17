@@ -37,6 +37,7 @@ export default function MyProductPage() {
 
       // update UI
       setCartItems(cartItems.filter(item => item._id !== id));
+      window.dispatchEvent(new Event("cart:updated"));
     } catch (err) {
       toast.error(err.message);
     }

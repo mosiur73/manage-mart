@@ -11,21 +11,46 @@ import { z } from "zod"
 
 const SELLER_ROLES = ["seller", "admin"]
 
-const productSchema = z.object({
-  name: z.string().min(1, "Name is required").max(120, "Name cannot exceed 120 characters"),
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .max(160, "Slug cannot exceed 160 characters")
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
-  description: z.string().min(1, "Description is required"),
-  price: z.coerce.number().min(0, "Price cannot be negative"),
-  category: z.string().min(1, "Category is required"),
-  brand: z.string().min(1, "Brand is required"),
-  stock: z.coerce.number().min(0, "Stock cannot be negative"),
-  shipping: z.coerce.number().min(0, "Shipping cost cannot be negative").default(0),
-  images: z.array(z.string().min(1)).min(1, "At least one product image is required"),
-})
+const productSchema = z
+  .object({
+    name: z.string().min(1, "Name is required").max(120, "Name cannot exceed 120 characters"),
+    slug: z
+      .string()
+      .min(1, "Slug is required")
+      .max(160, "Slug cannot exceed 160 characters")
+      .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
+    sku: z.string().trim().max(60, "SKU cannot exceed 60 characters").optional().or(z.literal("")),
+    shortDescription: z
+      .string()
+      .max(200, "Short description cannot exceed 200 characters")
+      .optional()
+      .or(z.literal("")),
+    description: z.string().min(1, "Description is required"),
+    // Comma-separated in the form, stored as an array.
+    tags: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .transform((value) =>
+        (value || "")
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      ),
+    purchasePrice: z.coerce.number().min(0, "Purchase price cannot be negative").optional().default(0),
+    regularPrice: z.coerce.number().min(0, "Regular price cannot be negative"),
+    sellingPrice: z.coerce.number().min(0, "Selling price cannot be negative"),
+    category: z.string().min(1, "Category is required"),
+    brand: z.string().min(1, "Brand is required"),
+    stock: z.coerce.number().min(0, "Stock cannot be negative"),
+    lowStockThreshold: z.coerce.number().min(0, "Low stock threshold cannot be negative").optional().default(5),
+    shipping: z.coerce.number().min(0, "Shipping cost cannot be negative").default(0),
+    images: z.array(z.string().min(1)).min(1, "At least one product image is required"),
+  })
+  .refine((data) => data.sellingPrice <= data.regularPrice, {
+    message: "Selling price cannot exceed the regular price.",
+    path: ["sellingPrice"],
+  })
 
 // category/brand come back as populated {_id, name, slug} sub-documents when
 // serializeProduct(populated: true) — pass through as-is; otherwise they're
@@ -48,6 +73,13 @@ function serializeProduct(product) {
     createdAt: product.createdAt?.toISOString?.() ?? product.createdAt,
     updatedAt: product.updatedAt?.toISOString?.() ?? product.updatedAt,
   }
+}
+
+// purchasePrice is the seller's internal cost — fine for the dashboard (their own
+// listings), but must never reach a customer-facing read (storefront, product page).
+function stripInternalFields(product) {
+  const { purchasePrice, ...rest } = product
+  return rest
 }
 
 const STOREFRONT_PAGE_SIZE = 12
@@ -76,7 +108,7 @@ export async function getStorefrontProducts({ search = "", category = "", brand 
     if (priceRange) {
       const [min, max] = priceRange.split("-").map(Number)
       if (!Number.isNaN(min) && !Number.isNaN(max)) {
-        filter.price = { $gte: min, $lte: max }
+        filter.sellingPrice = { $gte: min, $lte: max }
       }
     }
 
@@ -104,7 +136,7 @@ export async function getStorefrontProducts({ search = "", category = "", brand 
     ])
 
     return {
-      products: products.map(serializeProduct),
+      products: products.map((p) => stripInternalFields(serializeProduct(p))),
       total,
       page: safePage,
       totalPages: Math.max(1, Math.ceil(total / STOREFRONT_PAGE_SIZE)),
@@ -154,7 +186,7 @@ export async function getProductById(id) {
       .populate("brand", "name slug")
       .lean()
     if (!product) return null
-    return serializeProduct(product)
+    return stripInternalFields(serializeProduct(product))
   } catch (error) {
     // Includes invalid ObjectId CastErrors
     console.error("Failed to fetch product by id:", error)
@@ -184,11 +216,17 @@ export async function createProduct(prevState, formData) {
   const validatedFields = productSchema.safeParse({
     name: formData.get("name"),
     slug: formData.get("slug"),
+    sku: formData.get("sku") || "",
+    shortDescription: formData.get("shortDescription") || "",
     description: formData.get("description"),
-    price: formData.get("price"),
+    tags: formData.get("tags") || "",
+    purchasePrice: formData.get("purchasePrice") || 0,
+    regularPrice: formData.get("regularPrice"),
+    sellingPrice: formData.get("sellingPrice"),
     category: formData.get("category"),
     brand: formData.get("brand"),
     stock: formData.get("stock"),
+    lowStockThreshold: formData.get("lowStockThreshold") || 5,
     shipping: formData.get("shipping") || 0,
     images: formData.getAll("images"),
   })
@@ -202,7 +240,10 @@ export async function createProduct(prevState, formData) {
   }
 
   try {
-    await Product.create({ ...validatedFields.data, seller: session.user.id })
+    // "" would collide with mongoose's `sparse: true` uniqueness (only a wholly
+    // absent field is skipped, not an empty string) if two sellers left it blank.
+    const { sku, ...rest } = validatedFields.data
+    await Product.create({ ...rest, sku: sku || undefined, seller: session.user.id })
     revalidatePath("/dashboard")
     revalidatePath("/dashboard/products")
     revalidatePath("/service")
@@ -242,11 +283,17 @@ export async function updateProduct(id, prevState, formData) {
   const validatedFields = productSchema.safeParse({
     name: formData.get("name"),
     slug: formData.get("slug"),
+    sku: formData.get("sku") || "",
+    shortDescription: formData.get("shortDescription") || "",
     description: formData.get("description"),
-    price: formData.get("price"),
+    tags: formData.get("tags") || "",
+    purchasePrice: formData.get("purchasePrice") || 0,
+    regularPrice: formData.get("regularPrice"),
+    sellingPrice: formData.get("sellingPrice"),
     category: formData.get("category"),
     brand: formData.get("brand"),
     stock: formData.get("stock"),
+    lowStockThreshold: formData.get("lowStockThreshold") || 5,
     shipping: formData.get("shipping") || 0,
     images: formData.getAll("images"),
   })
@@ -268,7 +315,8 @@ export async function updateProduct(id, prevState, formData) {
       return { success: false, message: "You can only edit your own products." }
     }
 
-    const updated = await Product.findByIdAndUpdate(id, validatedFields.data, {
+    const { sku, ...rest } = validatedFields.data
+    const updated = await Product.findByIdAndUpdate(id, { ...rest, sku: sku || undefined }, {
       new: true,
       runValidators: true,
     })

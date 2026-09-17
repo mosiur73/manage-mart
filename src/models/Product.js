@@ -20,10 +20,49 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide a description."],
     },
-    price: {
+    shortDescription: {
+      type: String,
+      trim: true,
+      maxlength: [200, "Short description cannot be more than 200 characters"],
+    },
+    sku: {
+      type: String,
+      trim: true,
+      uppercase: true,
+      sparse: true,
+      unique: true,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    // Internal cost — never returned by public-facing product reads (see
+    // serializeProduct/stripInternalFields in dashboard/action.jsx).
+    purchasePrice: {
       type: Number,
-      required: [true, "Please provide a price."],
-      min: [0, "Price cannot be negative"],
+      min: [0, "Purchase price cannot be negative"],
+      default: 0,
+    },
+    // The "was" price shown struck through next to sellingPrice when a product is
+    // discounted. Equal to sellingPrice for a non-discounted product.
+    regularPrice: {
+      type: Number,
+      required: [true, "Please provide a regular price."],
+      min: [0, "Regular price cannot be negative"],
+    },
+    // sellingPrice <= regularPrice is enforced at the application layer (zod, in
+    // dashboard/action.jsx and the create/edit forms) — a Mongoose cross-field
+    // validator here would need `this.regularPrice`, which isn't reliably
+    // available during findOneAndUpdate (only on create/save).
+    sellingPrice: {
+      type: Number,
+      required: [true, "Please provide a selling price."],
+      min: [0, "Selling price cannot be negative"],
+    },
+    lowStockThreshold: {
+      type: Number,
+      min: [0, "Low stock threshold cannot be negative"],
+      default: 5,
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,

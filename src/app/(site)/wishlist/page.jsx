@@ -36,6 +36,7 @@ export default function WishlistPage() {
       if (!res.ok) throw new Error("Remove failed");
       toast.success("Removed from wishlist");
       setItems((prev) => prev.filter((item) => item.product !== productId));
+      window.dispatchEvent(new Event("wishlist:updated"));
     } catch (err) {
       toast.error(err.message);
     }
