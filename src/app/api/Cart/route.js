@@ -24,7 +24,8 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { productId, name, price, img, category } = body;
+    const { productId, name, price, img, category, quantity } = body;
+    const qty = Number.isInteger(quantity) && quantity > 0 ? quantity : 1;
 
     if (!productId) {
       return NextResponse.json({ message: "productId is required" }, { status: 400 });
@@ -33,7 +34,7 @@ export async function POST(req) {
     const existing = await Cart.findOne({ product: productId, user: userId });
 
     if (existing) {
-      existing.quantity += 1;
+      existing.quantity += qty;
       await existing.save();
       return NextResponse.json(existing, { status: 200 });
     }
@@ -45,7 +46,7 @@ export async function POST(req) {
       price,
       img,
       category,
-      quantity: 1,
+      quantity: qty,
     });
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {

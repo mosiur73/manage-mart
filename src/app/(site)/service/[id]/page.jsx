@@ -1,14 +1,11 @@
-import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { StarIcon } from "lucide-react"
 import { getProductById } from "@/app/dashboard/action"
 import { getProductReviews, getReviewGate } from "@/app/(site)/service/review-actions"
-import { getWishlistedProductIds } from "@/app/(site)/service/wishlist-actions"
-import AddToCartButton from "@/components/service/AddToCartButton"
 import ProductGallery from "@/components/service/ProductGallery"
+import ProductInfoTabs from "@/components/service/ProductInfoTabs"
+import ProductPurchasePanel from "@/components/service/ProductPurchasePanel"
 import ProductReviews from "@/components/service/ProductReviews"
-import WishlistButton from "@/components/service/WishlistButton"
 
 export default async function ProductDetails({ params }) {
   const { id } = await params
@@ -18,12 +15,7 @@ export default async function ProductDetails({ params }) {
     notFound()
   }
 
-  const [reviews, gate, wishlistedIds] = await Promise.all([
-    getProductReviews(id),
-    getReviewGate(id),
-    getWishlistedProductIds(),
-  ])
-  const isWishlisted = wishlistedIds.includes(id)
+  const [reviews, gate] = await Promise.all([getProductReviews(id), getReviewGate(id)])
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
@@ -32,11 +24,12 @@ export default async function ProductDetails({ params }) {
         <div className="space-y-6">
           <h1 className="text-4xl font-bold">{product.name}</h1>
           <div className="flex items-baseline gap-3">
-            <p className="text-2xl font-semibold text-primary">${product.sellingPrice.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-blue-600">${product.sellingPrice.toFixed(2)}</p>
             {product.regularPrice > product.sellingPrice && (
               <p className="text-lg text-muted-foreground line-through">${product.regularPrice.toFixed(2)}</p>
             )}
           </div>
+          <hr className="border-gray-200 dark:border-gray-800" />
           {product.sku && <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>}
           <div className="flex items-center text-sm text-muted-foreground">
             <StarIcon className="w-5 h-5 fill-yellow-400 text-yellow-400 mr-1" />
@@ -44,7 +37,6 @@ export default async function ProductDetails({ params }) {
               {product.ratings} ({product.ratingsCount} ratings)
             </span>
           </div>
-          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{product.description}</p>
           <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
               <span className="font-medium">Brand:</span> {product.brand?.name}
@@ -66,17 +58,13 @@ export default async function ProductDetails({ params }) {
               </p>
             )}
           </div>
-          <div className="gap-4 flex">
-            <AddToCartButton product={product} />
-            <Button size="lg" variant="outline" asChild className="w-full md:w-auto">
-              <Link href="/service">Back to Products</Link>
-            </Button>
-            <WishlistButton product={product} initialWishlisted={isWishlisted} />
-          </div>
+          <ProductPurchasePanel product={product} />
         </div>
       </div>
 
-      <ProductReviews productId={id} reviews={reviews} gate={gate} />
+      <ProductInfoTabs description={product.description} reviewsCount={reviews.length}>
+        <ProductReviews productId={id} reviews={reviews} gate={gate} />
+      </ProductInfoTabs>
     </div>
   )
 }

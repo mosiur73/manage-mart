@@ -75,9 +75,7 @@ export default function ProductReviews({ productId, reviews, gate }) {
   }
 
   return (
-    <div className="mt-12 space-y-8">
-      <h2 className="text-2xl font-bold">Reviews {reviews.length > 0 && `(${reviews.length})`}</h2>
-
+    <div className="space-y-8">
       {/* Review gate: form, already-reviewed, not-purchased, or signed-out */}
       <div className="border rounded-lg p-5 bg-gray-50 dark:bg-gray-900">
         {gate.status === "can-review" && (

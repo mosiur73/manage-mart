@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { StarIcon } from "lucide-react"
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,19 +11,42 @@ import WishlistButton from "./WishlistButton"
  * @param {{ product: Object, isWishlisted?: boolean }} props
  */
 export default function ProductCard({ product, isWishlisted = false }) {
+  const router = useRouter()
+
+  // A plain div + router.push (rather than wrapping the whole card in a <Link>)
+  // avoids nesting <button> inside <a> — invalid HTML that made clicks on the
+  // Add to Cart / wishlist buttons unreliably fall through to the card's own
+  // navigation. Those buttons stop propagation so this handler never fires for them.
+  function goToDetails() {
+    router.push(`/service/${product._id}`)
+  }
+
   return (
-    <Link
-      href={`/service/${product._id}`}
-      prefetch={false}
-      className="block bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden flex flex-col"
+    <div
+      onClick={goToDetails}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") goToDetails()
+      }}
+      className="cursor-pointer bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col transition hover:shadow-md"
     >
-      <Image
-        src={product.images?.[0] || "/placeholder.svg"}
-        alt={product.name}
-        width={400}
-        height={300}
-        className="w-full h-56 object-cover"
-      />
+      <div className="relative">
+        <Image
+          src={product.images?.[0] || "/placeholder.svg"}
+          alt={product.name}
+          width={400}
+          height={300}
+          className="w-full h-56 object-cover"
+        />
+        <div className="absolute bottom-2 right-2" onClick={(e) => e.stopPropagation()}>
+          <WishlistButton
+            product={product}
+            initialWishlisted={isWishlisted}
+            className="bg-white shadow-sm hover:bg-white"
+          />
+        </div>
+      </div>
 
       <div className="flex flex-col flex-1">
         <CardHeader className="p-4 pb-2">
@@ -52,15 +75,10 @@ export default function ProductCard({ product, isWishlisted = false }) {
             </div>
           </div>
         </CardContent>
-        {/* Nested buttons must not trigger the card's own navigation — stopPropagation
-            keeps the click from bubbling up to the wrapping <Link>. */}
         <CardFooter className="p-4 pt-0" onClick={(e) => e.stopPropagation()}>
-          <div className="flex gap-2 w-full">
-            <AddToCartButton product={product} className="flex-1" />
-            <WishlistButton product={product} initialWishlisted={isWishlisted} />
-          </div>
+          <AddToCartButton product={product} variant="outline" className="w-full" />
         </CardFooter>
       </div>
-    </Link>
+    </div>
   )
 }
